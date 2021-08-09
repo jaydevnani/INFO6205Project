@@ -7,9 +7,12 @@ public class Host {
     private int X;
     private int Y;
     private boolean isInfected;
+    private boolean isVaccinated;
     private Color color;
     HashMap<Virus,Boolean> viruses = new HashMap<>();
+    HostType hostType;
     int[] dir;
+    int daysInfected;
     Integer index;
     Random rand = new Random();
 
@@ -47,7 +50,15 @@ public class Host {
         isInfected = infected;
     }
 
-    public Color getColor() {
+    public boolean isVaccinated() {
+		return isVaccinated;
+	}
+
+	public void setVaccinated(boolean isVaccinated) {
+		this.isVaccinated = isVaccinated;
+	}
+
+	public Color getColor() {
         return color;
     }
 
@@ -75,6 +86,22 @@ public class Host {
 		this.viruses = viruses;
 	}
 
+	public HostType getHostType() {
+		return hostType;
+	}
+
+	public void setHostType(HostType hostType) {
+		this.hostType = hostType;
+	}
+	
+	public int getDaysInfected() {
+		return daysInfected;
+	}
+
+	public void setDaysInfected(int daysInfected) {
+		this.daysInfected = daysInfected;
+	}
+
 	public Host(int X, int Y, boolean isInfected, Virus virus, int[] dir) {
         setId(generateID());
         this.X = X;
@@ -86,7 +113,7 @@ public class Host {
         if (isInfected)
             this.color = Color.RED;
         else
-            this.color = Color.BLUE;
+            this.color = Color.GREEN;
     }
 
     public String getId() {
