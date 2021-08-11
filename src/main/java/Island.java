@@ -12,7 +12,7 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-public class MyPanel extends JPanel implements Observer, Constants {
+public class Island extends JPanel implements Observer, Constants {
 	/**
 	 * 
 	 */
@@ -23,12 +23,15 @@ public class MyPanel extends JPanel implements Observer, Constants {
 	Random rand = new Random();
 	Boolean isInstanceCreated = false;
 	List<Host> hostList = new ArrayList<>();
+	Population virusList;
 	HashMap<String, Integer> map = new HashMap<>();
 	SimulationResult benchMark;
+	VirusMutation vm;
 	int ctr = 0;
 
-	public MyPanel() {
+	public Island() {
 		this.totalPopulation = Constants.POPULATION;
+		vm = new VirusMutation();
 	}
 
 	public void paint(Graphics g) {
@@ -45,14 +48,17 @@ public class MyPanel extends JPanel implements Observer, Constants {
 	@Override
 	public void update(Observable observable, Object o) {
 		if (o instanceof VirusSimulation) {
-			updateLocations();
+			if(days % Constants.MUTATION_RATE == 0)
+				virusList = vm.mutate();
+			else virusList = null;
+			updateLocations(virusList);
 			repaint();
 		}
 	}
 
-	public void updateLocations() {
+	public void updateLocations(Population virusList) {
 		for (Host per : hostList) {
-			updateCoordinates(per);
+			updateCoordinates(per, virusList);
 			updateInfectedDayCount(per);
 			recover(per);
 			if (days > 365)
@@ -60,7 +66,7 @@ public class MyPanel extends JPanel implements Observer, Constants {
 		}
 	}
 
-	private void updateCoordinates(Host per) {
+	private void updateCoordinates(Host per, Population virusList) {
 
 		int[] dir = per.getDir();
 		int X = per.getX();
@@ -81,8 +87,8 @@ public class MyPanel extends JPanel implements Observer, Constants {
 
 		// co-ordinated which needs to null;
 		int nextX = X + dirX * 5, nextY = Y + dirY * 5;
-		boolean isCollide = checkForCollision(nextX, nextY, per);
-
+		boolean isCollide = checkForCollision(nextX, nextY, per, virusList);
+		
 		if (!isCollide) {
 			per.setDir(new int[] { dirX, dirY });
 			per.setX(X + dirX * 5);
@@ -205,7 +211,7 @@ public class MyPanel extends JPanel implements Observer, Constants {
 	}
 
 	// check for collision
-	public boolean checkForCollision(int X, int Y, Host per) {
+	public boolean checkForCollision(int X, int Y, Host per, Population virusList) {
 		String key = getKey(X, Y);
 		if (map.containsKey(key)) {
 			Integer index = map.get(key);
@@ -214,7 +220,7 @@ public class MyPanel extends JPanel implements Observer, Constants {
 			else {
 				Host nextPer = hostList.get(index.intValue());
 				if ((per.isInfected() && !nextPer.isVaccinated()) || (nextPer.isInfected() && !per.isVaccinated())) // if
-					infection(per, nextPer);
+					infection(per, nextPer, virusList);
 				return true; // collision detected
 			}
 		} else
@@ -257,7 +263,7 @@ public class MyPanel extends JPanel implements Observer, Constants {
 		return "" + X + "-" + Y;
 	}
 
-	public void infection(Host per, Host nextPer) {
+	public void infection(Host per, Host nextPer, Population virusList) {
 		if (per.getColor() == Color.RED && nextPer.getColor() == Color.GREEN) {
 			nextPer.setColor(Color.RED);
 			nextPer.setInfected(true);

@@ -1,29 +1,29 @@
 import java.util.Arrays;
 
 public class Population {
-    private Chromosome[] chromosomes;
+    private Virus[] virus;
     public Population(int length)
     {
-        chromosomes = new Chromosome[length];
+        virus = new Virus[length];
     }
     public Population initializePopulation() {
-        for (int i = 0; i < chromosomes.length; i++)
+        for (int i = 0; i < virus.length; i++)
         {
-            chromosomes[i] = new Chromosome(GeneticAlgorithm.TARGET_CHROMOSOME.length).initializeChromosome();
+            virus[i] = new Virus(Constants.GENES).initializeVirus();
         }
-        sortChromosomeByFitness();
+        sortVirusByFitness();
         return this;
     }
-    public Chromosome[] getChromosomes()
+    public Virus[] getVirus()
     {
-        return chromosomes;
+        return virus;
     }
-    public void sortChromosomeByFitness()
+    public void sortVirusByFitness()
     {
-        Arrays.sort(chromosomes, (chromosome1, chromosome2) -> {
+        Arrays.sort(virus, (Virus1, Virus2) -> {
             int flag = 0;
-            if (chromosome1.getFitness() > chromosome2.getFitness()) flag = -1;
-            else if (chromosome2.getFitness() > chromosome1.getFitness()) flag = 1;
+            if (Virus1.getFitness() > Virus2.getFitness()) flag = -1;
+            else if (Virus2.getFitness() > Virus1.getFitness()) flag = 1;
             return flag;
         });
     }

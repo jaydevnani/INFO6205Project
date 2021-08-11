@@ -1,6 +1,6 @@
 public class GeneticAlgorithm {
     public static final int POPULATION_SIZE = 8;
-    public static final int[] TARGET_CHROMOSOME = {1, 1, 0, 1, 0, 0, 1, 1, 1, 0};
+    public static final int[] TARGET_VIRUS = {1, 1, 0, 1, 0, 0, 1, 1, 1, 0};
     public static final double mutationrate = 0.25;
     public static final int eliteChromosome = 1;
     public static final int selectionSize = 4;
@@ -11,31 +11,31 @@ public class GeneticAlgorithm {
 
     private Population crossoverPopulation(Population population)
     {
-        Population crossoverPopulation = new Population(population.getChromosomes().length);
+        Population crossoverPopulation = new Population(population.getVirus().length);
         for (int i = 0; i < eliteChromosome; i++)
-            crossoverPopulation.getChromosomes()[i] = population.getChromosomes()[i];
-        for (int i = eliteChromosome; i < population.getChromosomes().length; i++)
+            crossoverPopulation.getVirus()[i] = population.getVirus()[i];
+        for (int i = eliteChromosome; i < population.getVirus().length; i++)
         {
-            Chromosome chromosome1 = selectPopulationSize(population).getChromosomes()[0];
-            Chromosome chromosome2 = selectPopulationSize(population).getChromosomes()[0];
-            crossoverPopulation.getChromosomes()[i] = crossoverChromosome(chromosome1, chromosome2);
+            Virus chromosome1 = selectPopulationSize(population).getVirus()[0];
+            Virus chromosome2 = selectPopulationSize(population).getVirus()[0];
+            crossoverPopulation.getVirus()[i] = crossoverChromosome(chromosome1, chromosome2);
         }
         return crossoverPopulation;
     }
     private Population mutatePopulation(Population population)
     {
-        Population mutatePopulation = new Population(population.getChromosomes().length);
+        Population mutatePopulation = new Population(population.getVirus().length);
         for (int i = 0; i < eliteChromosome; i++)
-            mutatePopulation.getChromosomes()[i] = population.getChromosomes()[i];
-        for (int i = eliteChromosome; i < population.getChromosomes().length; i++)
+            mutatePopulation.getVirus()[i] = population.getVirus()[i];
+        for (int i = eliteChromosome; i < population.getVirus().length; i++)
         {
-            mutatePopulation.getChromosomes()[i] = mutateChromosome(population.getChromosomes()[i]);
+            mutatePopulation.getVirus()[i] = mutateChromosome(population.getVirus()[i]);
         }
         return mutatePopulation;
     }
-    private Chromosome crossoverChromosome(Chromosome chromosome1, Chromosome chromosome2)
+    private Virus crossoverChromosome(Virus chromosome1, Virus chromosome2)
     {
-        Chromosome crossoverChromosome = new Chromosome(TARGET_CHROMOSOME.length);
+        Virus crossoverChromosome = new Virus(TARGET_VIRUS.length);
         for (int i = 0; i < chromosome1.getGenes().length; i++)
         {
             if (Math.random() < 0.5)
@@ -45,9 +45,9 @@ public class GeneticAlgorithm {
         }
         return crossoverChromosome;
     }
-    private Chromosome mutateChromosome(Chromosome chromosome)
+    private Virus mutateChromosome(Virus chromosome)
     {
-        Chromosome mutateChromosome = new Chromosome(TARGET_CHROMOSOME.length);
+        Virus mutateChromosome = new Virus(TARGET_VIRUS.length);
         for(int i = 0; i < chromosome.getGenes().length; i++)
         {
             if (Math.random() < mutationrate)
@@ -66,9 +66,9 @@ public class GeneticAlgorithm {
         Population selectedPopulation = new Population(selectionSize);
         for (int i = 0; i < selectionSize; i++)
         {
-            selectedPopulation.getChromosomes()[i] = population.getChromosomes()[(int)(Math.random() * population.getChromosomes().length)];
+            selectedPopulation.getVirus()[i] = population.getVirus()[(int)(Math.random() * population.getVirus().length)];
         }
-        selectedPopulation.sortChromosomeByFitness();
+        selectedPopulation.sortVirusByFitness();
         return selectedPopulation;
     }
 }

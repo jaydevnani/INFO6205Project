@@ -11,13 +11,13 @@ public class MyPanelTest {
 
     @Test
     public void keyTest(){
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island();
         assertEquals(new String("5-3"), panel.getKey(5,3));
     }
 
     @Test
     public void populationCountTest(){
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island();
 
         List<Host> pop1 = panel.generatePopulation(100);
         assertNotNull(pop1);
@@ -30,7 +30,7 @@ public class MyPanelTest {
 
     @Test
     public void populationTest(){
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island();
         assertEquals(20, panel.getActualPopulation(100));
         assertEquals(50, panel.getActualPopulation(250));
         assertEquals(100, panel.getActualPopulation(500));
@@ -38,7 +38,7 @@ public class MyPanelTest {
 
     @Test
     public void quarantineCheckTest(){
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island();
 
         Host p_q = new Host();
         p_q.setInfected(true);
@@ -53,7 +53,7 @@ public class MyPanelTest {
 
     @Test
     public void spreadTest1(){
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island(100);
         Host per = new Host();
         Host nextPer = new Host();
         nextPer.setFoll_quarantine(true);
@@ -64,7 +64,7 @@ public class MyPanelTest {
     public void spreadTest2(){
         Random r = new Random();
 
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island(100);
         Host per = new Host();
         Host nextPer = new Host();
 
@@ -80,7 +80,7 @@ public class MyPanelTest {
     public void spreadTest3(){
         Random r = new Random();
 
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island(100);
         Host per = new Host();
         Host nextPer = new Host();
 
@@ -103,7 +103,7 @@ public class MyPanelTest {
     public void changeDirectionTest1(){
         Random r = new Random();
 
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island(100);
         Host per = new Host(r.nextInt(), r.nextInt(), new int[]{1,1});
         panel.changeDirection(per);
 
@@ -115,7 +115,7 @@ public class MyPanelTest {
     public void changeDirectionTest2(){
         Random r = new Random();
 
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island(100);
         Host per = new Host(r.nextInt(), r.nextInt(), new int[]{-1,-1});
         panel.changeDirection(per);
 
@@ -127,7 +127,7 @@ public class MyPanelTest {
     public void changeDirectionTest3(){
         Random r = new Random();
 
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island(100);
         Host per = new Host(r.nextInt(), r.nextInt(), new int[]{1,-1});
         panel.changeDirection(per);
 
@@ -139,7 +139,7 @@ public class MyPanelTest {
     public void changeDirectionTest4(){
         Random r = new Random();
 
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island(100);
         Host per = new Host(r.nextInt(), r.nextInt(), new int[]{-1,-1});
         panel.changeDirection(per);
 
@@ -150,7 +150,7 @@ public class MyPanelTest {
     @Test
     public void collisionTest(){
         Random r = new Random();
-        MyPanel panel = new MyPanel(100);
+        Island panel = new Island(100);
         Host per = new Host();
         assertFalse(panel.checkForCollision(r.nextInt(), r.nextInt(), per));
     }

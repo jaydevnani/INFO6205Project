@@ -9,6 +9,8 @@ public interface Constants {
     int StartX = 50;
     int StartY = 10;
     int upperBound = 60;
+    int GENES = 10;
+    int MUTATION_RATE = 6;
 }
 
 enum HostType {

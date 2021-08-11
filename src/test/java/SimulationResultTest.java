@@ -8,7 +8,7 @@ public class SimulationResultTest {
 
     @Test
     public void getTotalPopulationTest(){
-        MyPanel m = new MyPanel(100);
+        Island m = new Island(100);
         List<Person> population = m.generatePopulation(100);
         assertNotNull(population);
         LinkedHashMap<Person, List<Person>> contact_list = m.getContact_tracing_list();
@@ -21,7 +21,7 @@ public class SimulationResultTest {
 
     @Test
     public void getHealthyCountTest(){
-        MyPanel m = new MyPanel(100);
+        Island m = new Island(100);
         List<Person> population = m.generatePopulation(100);
         LinkedHashMap<Person, List<Person>> contact_list = m.getContact_tracing_list();
         SimulationResult sm = new SimulationResult(population, contact_list);
@@ -30,7 +30,7 @@ public class SimulationResultTest {
 
     @Test
     public void getTotalInfectedTest(){
-        MyPanel m = new MyPanel(100);
+        Island m = new Island(100);
         List<Person> population = m.generatePopulation(100);
         assertNotNull(population);
         LinkedHashMap<Person, List<Person>> contact_list = m.getContact_tracing_list();
@@ -41,7 +41,7 @@ public class SimulationResultTest {
 
     @Test
     public void getQuarantineCountTest(){
-        MyPanel m = new MyPanel(100);
+        Island m = new Island(100);
         List<Person> population = m.generatePopulation(100);
         assertNotNull(population);
         LinkedHashMap<Person, List<Person>> contact_list = m.getContact_tracing_list();
@@ -52,7 +52,7 @@ public class SimulationResultTest {
 
     @Test
     public void getPopulationWithMaskTest(){
-        MyPanel m = new MyPanel(100);
+        Island m = new Island(100);
         List<Person> population = m.generatePopulation(100);
         assertNotNull(population);
         LinkedHashMap<Person, List<Person>> contact_list = m.getContact_tracing_list();
@@ -63,7 +63,7 @@ public class SimulationResultTest {
 
     @Test
     public void getPopulationFoll_SocialDistancingTest(){
-        MyPanel m = new MyPanel(100);
+        Island m = new Island(100);
         List<Person> population = m.generatePopulation(100);
         assertNotNull(population);
         LinkedHashMap<Person, List<Person>> contact_list = m.getContact_tracing_list();
@@ -74,7 +74,7 @@ public class SimulationResultTest {
 
     @Test
     public void getInfectedQuarantineTest(){
-        MyPanel m = new MyPanel(100);
+        Island m = new Island(100);
         List<Person> population = m.generatePopulation(100);
         assertNotNull(population);
         LinkedHashMap<Person, List<Person>> contact_list = m.getContact_tracing_list();

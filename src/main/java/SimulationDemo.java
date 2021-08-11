@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 public class SimulationDemo implements ActionListener, Constants {
-	private MyPanel panel = null;
+	private Island panel = null;
 	private VirusSimulation sim = new VirusSimulation();
 	private JButton btnStart;
 	JSplitPane splitPane;
@@ -87,7 +87,7 @@ public class SimulationDemo implements ActionListener, Constants {
 			btnStart.setText("Resume Simulation");
 		} else {
 			System.out.println("Simulation has been started");
-			panel = new MyPanel();
+			panel = new Island();
 			System.out.println("Population count = " + population);
 			splitPane.setRightComponent(panel);
 
