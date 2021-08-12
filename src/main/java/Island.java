@@ -29,6 +29,7 @@ public class Island extends JPanel implements Observer, Constants {
 	HashMap<String, Integer> map = new HashMap<>();
 	SimulationResult benchMark;
 	VirusMutation vm;
+	GeneticAlgorithm ga = new GeneticAlgorithm();
 	int ctr = 0;
 
 	public Island() {
@@ -56,16 +57,24 @@ public class Island extends JPanel implements Observer, Constants {
 	}
 
 	public void updateLocations() {
+		HashMap<Virus, Integer> newVirusSet;
 		for (Host per : hostList) {
-			if (days % Constants.MUTATION_RATE == 0 && per.isInfected() && rand.nextInt(100) < 32)
-				//mutate virus and return
-				virusList.putAll(virusList);
+			if (days % Constants.MUTATION_RATE == 0 && per.isInfected() && rand.nextInt(100) < 32) {
+				newVirusSet = addVirusToSet(ga.mutatePopulation(per));
+				per.addViruses(ga.mutatePopulation(per));
+				virusList.putAll(newVirusSet);
+			}
 			updateCoordinates(per, virusList);
 			updateInfectedDayCount(per);
 			recover(per);
 			if (days > 365)
 				vaccinate(per);
 		}
+	}
+
+	private HashMap<Virus, Integer> addVirusToSet(Virus mutateVirus) {
+		
+		return null;
 	}
 
 	private void updateCoordinates(Host per, HashMap<Virus, Integer> virusList) {

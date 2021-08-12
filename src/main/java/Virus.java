@@ -35,8 +35,7 @@ public class Virus {
         int chromosomeFitness = 0;
         for(int i = 0; i < genes.length; i++)
         {
-            if (genes[i] == GeneticAlgorithm.TARGET_VIRUS[i])
-                chromosomeFitness++;
+        	if(genes[i] != 0) chromosomeFitness ++;
         }
         return chromosomeFitness;
     }
