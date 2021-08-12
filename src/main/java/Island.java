@@ -5,7 +5,9 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -23,7 +25,7 @@ public class Island extends JPanel implements Observer, Constants {
 	Random rand = new Random();
 	Boolean isInstanceCreated = false;
 	List<Host> hostList = new ArrayList<>();
-	Population virusList;
+	HashMap<Virus, Integer> virusList;
 	HashMap<String, Integer> map = new HashMap<>();
 	SimulationResult benchMark;
 	VirusMutation vm;
@@ -48,16 +50,16 @@ public class Island extends JPanel implements Observer, Constants {
 	@Override
 	public void update(Observable observable, Object o) {
 		if (o instanceof VirusSimulation) {
-			if(days % Constants.MUTATION_RATE == 0)
-				virusList = vm.mutate();
-			else virusList = null;
-			updateLocations(virusList);
+			updateLocations();
 			repaint();
 		}
 	}
 
-	public void updateLocations(Population virusList) {
+	public void updateLocations() {
 		for (Host per : hostList) {
+			if (days % Constants.MUTATION_RATE == 0 && per.isInfected() && rand.nextInt(100) < 32)
+				//mutate virus and return
+				virusList.putAll(virusList);
 			updateCoordinates(per, virusList);
 			updateInfectedDayCount(per);
 			recover(per);
@@ -66,7 +68,7 @@ public class Island extends JPanel implements Observer, Constants {
 		}
 	}
 
-	private void updateCoordinates(Host per, Population virusList) {
+	private void updateCoordinates(Host per, HashMap<Virus, Integer> virusList) {
 
 		int[] dir = per.getDir();
 		int X = per.getX();
@@ -88,7 +90,7 @@ public class Island extends JPanel implements Observer, Constants {
 		// co-ordinated which needs to null;
 		int nextX = X + dirX * 5, nextY = Y + dirY * 5;
 		boolean isCollide = checkForCollision(nextX, nextY, per, virusList);
-		
+
 		if (!isCollide) {
 			per.setDir(new int[] { dirX, dirY });
 			per.setX(X + dirX * 5);
@@ -109,17 +111,18 @@ public class Island extends JPanel implements Observer, Constants {
 		int infectionPeriod;
 		if (p.isInfected()) {
 			infectionPeriod = p.getDaysInfected();
-			//System.out.println("Host " + p.getId() + " has been infected for " + infectionPeriod);
+			// System.out.println("Host " + p.getId() + " has been infected for " +
+			// infectionPeriod);
 			infectionPeriod++;
 			p.setDaysInfected(infectionPeriod);
-			//System.out.println("Infection day count up to " + infectionPeriod);
+			// System.out.println("Infection day count up to " + infectionPeriod);
 		}
 	}
 
 	private void recover(Host p) {
 		if (p.isInfected()) {
 			int random = rand.nextInt(100);
-			//System.out.println("Random number : " + random + p.getId());
+			// System.out.println("Random number : " + random + p.getId());
 			if (random < 1) {
 				p.setInfected(false);
 				p.setColor(Color.ORANGE);
@@ -141,10 +144,18 @@ public class Island extends JPanel implements Observer, Constants {
 
 	private void vaccinate(Host p) {
 		if (!p.isInfected() && !p.isVaccinated()) {
-			if (rand.nextInt(5000) < 5) {
+			if (rand.nextInt(2500) < 5) {
 				p.setVaccinated(true);
+				if(p.getViruses().isEmpty()) {
 				p.setColor(Color.BLUE);
-				//System.out.println("Host " + p.getId() + " has been vaccinated against Covid on day " + days);
+				p.setHostType(HostType.B1);
+				}
+				else {
+					p.setColor(Color.YELLOW);
+					p.setHostType(HostType.B2);
+				}
+				// System.out.println("Host " + p.getId() + " has been vaccinated against Covid
+				// on day " + days);
 			}
 		}
 	}
@@ -163,6 +174,7 @@ public class Island extends JPanel implements Observer, Constants {
 				if (count == 0) {
 					per.setInfected(true);
 					per.setColor(Color.RED);
+					per.addViruses(new Virus(10));
 					per.setHostType(HostType.A2);
 				} else
 					per.setInfected(false);
@@ -211,7 +223,7 @@ public class Island extends JPanel implements Observer, Constants {
 	}
 
 	// check for collision
-	public boolean checkForCollision(int X, int Y, Host per, Population virusList) {
+	public boolean checkForCollision(int X, int Y, Host per, HashMap<Virus, Integer> virusList) {
 		String key = getKey(X, Y);
 		if (map.containsKey(key)) {
 			Integer index = map.get(key);
@@ -263,17 +275,35 @@ public class Island extends JPanel implements Observer, Constants {
 		return "" + X + "-" + Y;
 	}
 
-	public void infection(Host per, Host nextPer, Population virusList) {
+	public void infection(Host per, Host nextPer, HashMap<Virus, Integer> virusList) {
 		if (per.getColor() == Color.RED && nextPer.getColor() == Color.GREEN) {
+			nextPer.setHostType(HostType.A2);
+			nextPer.addViruses(getVirus(per));
 			nextPer.setColor(Color.RED);
 			nextPer.setInfected(true);
 			nextPer.setDaysInfected(1);
 		}
 		if (per.getColor() == Color.GREEN && nextPer.getColor() == Color.RED) {
+			per.setHostType(HostType.A2);
+			per.addViruses(getVirus(nextPer));
 			per.setColor(Color.RED);
 			per.setInfected(true);
 			per.setDaysInfected(1);
 		}
+	}
+
+	private Virus getVirus(Host per) {
+
+		Iterator virusIterator = per.getViruses().entrySet().iterator();
+
+		while (virusIterator.hasNext()) {
+			Map.Entry<Virus, Boolean> viruses = (Map.Entry) virusIterator.next();
+			Virus virus = viruses.getKey();
+			Boolean antibodies = viruses.getValue();
+			if (!antibodies)
+				return virus;
+		}
+		return null;
 	}
 
 	private void safeToMove(Host per) {

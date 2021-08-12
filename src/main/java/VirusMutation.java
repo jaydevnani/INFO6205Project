@@ -1,7 +1,8 @@
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class VirusMutation {
-    public Population mutate() {
+    public HashMap<Virus, Integer> mutate() {
         Population population = new Population(GeneticAlgorithm.POPULATION_SIZE).initializePopulation();
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
         System.out.println("----------------------");

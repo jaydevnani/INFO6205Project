@@ -4,10 +4,10 @@ public class GeneticAlgorithm {
     public static final double mutationrate = 0.25;
     public static final int eliteChromosome = 1;
     public static final int selectionSize = 4;
-    public Population evolve(Population population)
+    /*public Population evolve(Population population)
     {
         return mutatePopulation(crossoverPopulation(population));
-    }
+    }*/
 
     private Population crossoverPopulation(Population population)
     {
@@ -22,16 +22,16 @@ public class GeneticAlgorithm {
         }
         return crossoverPopulation;
     }
-    private Population mutatePopulation(Population population)
+    private Virus mutatePopulation(Host per)
     {
-        Population mutatePopulation = new Population(population.getVirus().length);
+        Virus mutatedVirus = new Virus(10);
         for (int i = 0; i < eliteChromosome; i++)
-            mutatePopulation.getVirus()[i] = population.getVirus()[i];
-        for (int i = eliteChromosome; i < population.getVirus().length; i++)
+        	mutatedVirus.getGenes()[i] = per.getViruses().entrySet().iterator().next().getKey().getGenes()[i];
+        for (int i = eliteChromosome; i < 10; i++)
         {
-            mutatePopulation.getVirus()[i] = mutateChromosome(population.getVirus()[i]);
+        	mutatedVirus.getGenes()[i] = mutateChromosome(per.getViruses().entrySet().iterator().next().getKey().getGenes()[i]);
         }
-        return mutatePopulation;
+        return mutatedVirus;
     }
     private Virus crossoverChromosome(Virus chromosome1, Virus chromosome2)
     {
@@ -45,21 +45,15 @@ public class GeneticAlgorithm {
         }
         return crossoverChromosome;
     }
-    private Virus mutateChromosome(Virus chromosome)
+    private int mutateChromosome(int gene)
     {
-        Virus mutateChromosome = new Virus(TARGET_VIRUS.length);
-        for(int i = 0; i < chromosome.getGenes().length; i++)
-        {
             if (Math.random() < mutationrate)
             {
-                if (Math.random() < 0.5) mutateChromosome.getGenes()[i] = 1;
+                if (Math.random() < 0.5) return 1;
                 else
-                    mutateChromosome.getGenes()[i] = 0;
+                	return 0;
             }
-            else
-                mutateChromosome.getGenes()[i] = chromosome.getGenes()[i];
-        }
-        return mutateChromosome;
+            else return gene;
     }
     private Population selectPopulationSize(Population population)
     {
