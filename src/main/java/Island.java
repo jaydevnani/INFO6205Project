@@ -58,15 +58,29 @@ public class Island extends JPanel implements Observer, Constants {
 
 	public void updateLocations() {
 		Host per;
+		Host person;
 		Virus virus;
+		Virus v;
+		int c = 0;
 		Iterator<Host> listIterator = hostList.iterator();
 		while(listIterator.hasNext()) {
 			per = listIterator.next();
+			person = hostList.get(0);
+			c++;
 			if (days % Constants.MUTATION_RATE == 0 && per.isInfected() && rand.nextInt(100) < 32) {
 				virus = ga.mutatePopulation(per);
 				addVirusToMap(virus, per);
 				per.addViruses(virus);
 			}
+			if (days > 100) {
+				for (int i = 0; i < hostList.size(); i++)
+					person = hostList.get(i);
+				if (per.isInfected() && person.isInfected()) {
+					virus = per.getViruses().entrySet().iterator().next().getKey();
+					v = person.getViruses().entrySet().iterator().next().getKey();
+					addVirusToMap(ga.recombineChromosome(virus, v), per);
+				}
+
 			/*if (per.isInfected() && per.getViruses().size() >= 2) {
 				System.out.println(per.getViruses());
 				addVirusToMap(ga.populationRecombination(per), per);
@@ -74,10 +88,29 @@ public class Island extends JPanel implements Observer, Constants {
 			}*/
 			updateCoordinates(per);
 			recover(per);
+			//succumb(per);
 			if (days > 50)
 				vaccinate(per);
 		}
 	}
+
+	/*
+	 * public void updateCrossover() { HashMap<Virus, Integer> crossoverSet;
+	 * for(Host per : hostList) { if (per.isInfected() && virusList.get(per) >= 2) {
+	 * crossoverSet = addVirusToSet(ga.populationRecombination(per));
+	 * per.addViruses(ga.populationRecombination(per));
+	 * virusList.putAll(crossoverSet); } updateCoordinates(per, virusList); } }
+	 */
+
+	private void succumb(Host per) {
+		if (per.isInfected()) {
+			if (rand.nextInt(100) < Constants.DEATH_RATE) {
+				hostList.remove(per);
+				totalPopulation--;
+			}
+		}
+	}
+
 	private void addVirusToMap(Virus virus, Host per) {
 		int fitness = fitnessCalculation(virus, per);
 		if (virusList.containsKey(virus)) {
@@ -132,6 +165,8 @@ public class Island extends JPanel implements Observer, Constants {
 		List<Virus> viruses = getVirusListByHost(p);
 		if (p.isInfected() && viruses.size() != 0) {
 			for (int i = 0; i < viruses.size(); i++) {
+			//	System.out.println(viruses.get(i));
+			//	System.out.println(virusList);
 				fitness = virusList.get(viruses.get(i));
 				if (fitness < rand.nextInt(100) && rand.nextInt(100) < Constants.RECOVERY_RATE) {
 					p.recoverFrom(viruses.get(i));
