@@ -11,18 +11,18 @@ public class GeneticAlgorithm {
         return mutatePopulation(crossoverPopulation(population));
     }*/
 
-    private Population crossoverPopulation(Population population)
+    public Population populationRecombination(Population population)
     {
-        Population crossoverPopulation = new Population(population.getVirus().length);
+        Population populationRecombination = new Population(population.getVirus().length);
         for (int i = 0; i < eliteChromosome; i++)
-            crossoverPopulation.getVirus()[i] = population.getVirus()[i];
+            populationRecombination.getVirus()[i] = population.getVirus()[i];
         for (int i = eliteChromosome; i < population.getVirus().length; i++)
         {
             Virus chromosome1 = selectPopulationSize(population).getVirus()[0];
             Virus chromosome2 = selectPopulationSize(population).getVirus()[0];
-            crossoverPopulation.getVirus()[i] = crossoverChromosome(chromosome1, chromosome2);
+            populationRecombination.getVirus()[i] = crossoverChromosome(chromosome1, chromosome2);
         }
-        return crossoverPopulation;
+        return populationRecombination;
     }
     public Virus mutatePopulation(Host per)
     {
