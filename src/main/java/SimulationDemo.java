@@ -68,7 +68,7 @@ public class SimulationDemo implements ActionListener, Constants {
 
 		splitPane.setBottomComponent(emptyPanel);
 
-		splitPane.setDividerLocation(100);
+		splitPane.setDividerLocation(30);
 		frame.add(splitPane);
 
 		frame.setVisible(true);

@@ -74,7 +74,7 @@ public class Island extends JPanel implements Observer, Constants {
 			}*/
 			updateCoordinates(per);
 			recover(per);
-			//succumb(per);
+			succumb(per);
 			if (days > 365)
 				vaccinate(per);
 		}
@@ -151,8 +151,6 @@ public class Island extends JPanel implements Observer, Constants {
 		List<Virus> viruses = getVirusListByHost(p);
 		if (p.isInfected() && viruses.size() != 0) {
 			for (int i = 0; i < viruses.size(); i++) {
-				System.out.println(viruses.get(i));
-				System.out.println(virusList);
 				fitness = virusList.get(viruses.get(i));
 				if (fitness < rand.nextInt(100) && rand.nextInt(100) < Constants.RECOVERY_RATE) {
 					p.recoverFrom(viruses.get(i));
