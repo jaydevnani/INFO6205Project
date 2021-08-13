@@ -35,7 +35,7 @@ public class GeneticAlgorithm {
         }
         return mutatedVirus;
     }
-    private Virus recombineChromosome(Virus chromosome1, Virus chromosome2)
+    public Virus recombineChromosome(Virus chromosome1, Virus chromosome2)
     {
         Virus recombineChromosome = new Virus(TARGET_VIRUS.length);
         for (int i = 0; i < chromosome1.getGenes().length; i++)
