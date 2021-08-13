@@ -35,17 +35,17 @@ public class GeneticAlgorithm {
         }
         return mutatedVirus;
     }
-    private Virus crossoverChromosome(Virus chromosome1, Virus chromosome2)
+    private Virus recombineChromosome(Virus chromosome1, Virus chromosome2)
     {
-        Virus crossoverChromosome = new Virus(TARGET_VIRUS.length);
+        Virus recombineChromosome = new Virus(TARGET_VIRUS.length);
         for (int i = 0; i < chromosome1.getGenes().length; i++)
         {
             if (Math.random() < 0.5)
-                crossoverChromosome.getGenes()[i] = chromosome1.getGenes()[i];
+                recombineChromosome.getGenes()[i] = chromosome1.getGenes()[i];
             else
-                crossoverChromosome.getGenes()[i] = chromosome2.getGenes()[i];
+                recombineChromosome.getGenes()[i] = chromosome2.getGenes()[i];
         }
-        return crossoverChromosome;
+        return recombineChromosome;
     }
     private int mutateChromosome(int gene)
     {
