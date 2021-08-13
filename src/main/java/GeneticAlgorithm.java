@@ -47,24 +47,11 @@ public class GeneticAlgorithm {
         }
         return recombineChromosome;
     }
-    private int mutateChromosome(int gene)
-    {
-            if (Math.random() < mutationrate)
-            {
-                if (Math.random() < 0.5) return 1;
-                else
-                	return 0;
-            }
-            else return gene;
-    }
-    private Population selectPopulationSize(Population population)
-    {
-        Population selectedPopulation = new Population(selectionSize);
-        for (int i = 0; i < selectionSize; i++)
-        {
-            selectedPopulation.getVirus()[i] = population.getVirus()[(int)(Math.random() * population.getVirus().length)];
-        }
-        selectedPopulation.sortVirusByFitness();
-        return selectedPopulation;
+    private int mutateChromosome(int gene) {
+        if (Math.random() < mutationrate) {
+            if (Math.random() < 0.5) return 1;
+            else
+                return 0;
+        } else return gene;
     }
 }
