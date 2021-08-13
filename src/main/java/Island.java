@@ -71,6 +71,18 @@ public class Island extends JPanel implements Observer, Constants {
 				vaccinate(per);
 		}
 	}
+	
+	public void updateCrossover() {
+		HashMap<Virus, Integer> crossoverSet;
+		for(Host per : hostList) {
+			if (per.isInfected() && virusList.get(per) >= 2) {
+				crossoverSet = addVirusToSet(ga.populationRecombination(per));
+				per.addViruses(ga.populationRecombination(per));
+				virusList.putAll(crossoverSet);
+			}
+			updateCoordinates(per, virusList);
+		}
+	}
 
 	private HashMap<Virus, Integer> addVirusToSet(Virus mutateVirus) {
 		
