@@ -13,13 +13,13 @@ public class GeneticAlgorithm {
     {
 
         Virus recombinationVirus = new Virus(10);
-        Population population = new Population(5);
+        //Population population = new Population(5);
         for (int i = 0; i < eliteChromosome; i++)
             recombinationVirus.getGenes()[i] = per.getViruses().entrySet().iterator().next().getKey().getGenes()[i];
         for (int i = eliteChromosome; i < 10; i++)
         {
-            Virus chromosome1 = selectPopulationSize(population).getVirus()[0];
-            Virus chromosome2 = selectPopulationSize(population).getVirus()[0];
+            Virus chromosome1 = per.getViruses().entrySet().iterator().next().getKey();
+            Virus chromosome2 = per.getViruses().entrySet().iterator().next().getKey();
             recombinationVirus = recombineChromosome(chromosome1, chromosome2);
         }
         return recombinationVirus;
