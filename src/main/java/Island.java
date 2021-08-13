@@ -80,34 +80,13 @@ public class Island extends JPanel implements Observer, Constants {
 					v = person.getViruses().entrySet().iterator().next().getKey();
 					addVirusToMap(ga.recombineChromosome(virus, v), per);
 				}
-
-			/*if (per.isInfected() && per.getViruses().size() >= 2) {
-				System.out.println(per.getViruses());
-				addVirusToMap(ga.populationRecombination(per), per);
-				per.addViruses(ga.populationRecombination(per));
-			}*/
+				//System.out.println(virusList);
+			}
+			
 			updateCoordinates(per);
 			recover(per);
-			//succumb(per);
 			if (days > 50)
 				vaccinate(per);
-		}
-	}
-
-	/*
-	 * public void updateCrossover() { HashMap<Virus, Integer> crossoverSet;
-	 * for(Host per : hostList) { if (per.isInfected() && virusList.get(per) >= 2) {
-	 * crossoverSet = addVirusToSet(ga.populationRecombination(per));
-	 * per.addViruses(ga.populationRecombination(per));
-	 * virusList.putAll(crossoverSet); } updateCoordinates(per, virusList); } }
-	 */
-
-	private void succumb(Host per) {
-		if (per.isInfected()) {
-			if (rand.nextInt(100) < Constants.DEATH_RATE) {
-				hostList.remove(per);
-				totalPopulation--;
-			}
 		}
 	}
 
@@ -165,8 +144,6 @@ public class Island extends JPanel implements Observer, Constants {
 		List<Virus> viruses = getVirusListByHost(p);
 		if (p.isInfected() && viruses.size() != 0) {
 			for (int i = 0; i < viruses.size(); i++) {
-			//	System.out.println(viruses.get(i));
-			//	System.out.println(virusList);
 				fitness = virusList.get(viruses.get(i));
 				if (fitness < rand.nextInt(100) && rand.nextInt(100) < Constants.RECOVERY_RATE) {
 					p.recoverFrom(viruses.get(i));
