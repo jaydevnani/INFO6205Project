@@ -13,6 +13,10 @@ public interface Constants {
     int MUTATION_RATE = 6;
 }
 
-enum HostType {
+enum HostGenoType {
 	A1, A2, B1, B2;
+}
+
+enum InfectionStatus {
+	NAIVE, RECOVERED, VACCINATED; 
 }

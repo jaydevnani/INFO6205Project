@@ -10,7 +10,8 @@ public class Host {
 	private boolean isVaccinated;
 	private Color color;
 	HashMap<Virus, Boolean> viruses = new HashMap<>();
-	HostType hostType;
+	HostGenoType hostGenoType;
+	InfectionStatus infectionStatus;
 	int[] dir;
 	int daysInfected;
 	Integer index;
@@ -78,6 +79,22 @@ public class Host {
 		return r;
 	}
 
+	public HostGenoType getHostGenoType() {
+		return hostGenoType;
+	}
+
+	public void setHostGenoType(HostGenoType hostGenoType) {
+		this.hostGenoType = hostGenoType;
+	}
+
+	public InfectionStatus getInfectionStatus() {
+		return infectionStatus;
+	}
+
+	public void setInfectionStatus(InfectionStatus infectionStatus) {
+		this.infectionStatus = infectionStatus;
+	}
+
 	public HashMap<Virus, Boolean> getViruses() {
 		return viruses;
 	}
@@ -88,14 +105,6 @@ public class Host {
 
 	public void addViruses(Virus virus) {
 		this.viruses.put(virus, false);
-	}
-
-	public HostType getHostType() {
-		return hostType;
-	}
-
-	public void setHostType(HostType hostType) {
-		this.hostType = hostType;
 	}
 
 	public int getDaysInfected() {
@@ -151,5 +160,9 @@ public class Host {
 			uid += r.nextInt(9);
 		}
 		return uid;
+	}
+	
+	public void recoverFrom(Virus virus) {
+		viruses.replace(virus, true);
 	}
 }

@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 public class GeneticAlgorithm {
     public static final int POPULATION_SIZE = 8;
     public static final int[] TARGET_VIRUS = {1, 1, 0, 1, 0, 0, 1, 1, 1, 0};
