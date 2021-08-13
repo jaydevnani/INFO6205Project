@@ -74,29 +74,10 @@ public class Island extends JPanel implements Observer, Constants {
 			}*/
 			updateCoordinates(per);
 			recover(per);
-			succumb(per);
-			if (days > 365)
+			if (days > 50)
 				vaccinate(per);
 		}
 	}
-
-	/*
-	 * public void updateCrossover() { HashMap<Virus, Integer> crossoverSet;
-	 * for(Host per : hostList) { if (per.isInfected() && virusList.get(per) >= 2) {
-	 * crossoverSet = addVirusToSet(ga.populationRecombination(per));
-	 * per.addViruses(ga.populationRecombination(per));
-	 * virusList.putAll(crossoverSet); } updateCoordinates(per, virusList); } }
-	 */
-
-	private void succumb(Host per) {
-		if (per.isInfected()) {
-			if (rand.nextInt(100) < Constants.DEATH_RATE) {
-				hostList.remove(per);
-				totalPopulation--;
-			}
-		}
-	}
-
 	private void addVirusToMap(Virus virus, Host per) {
 		int fitness = fitnessCalculation(virus, per);
 		if (virusList.containsKey(virus)) {
@@ -167,13 +148,13 @@ public class Island extends JPanel implements Observer, Constants {
 
 	private void vaccinate(Host p) {
 		if (!p.isInfected() && !p.isVaccinated()) {
-			if (rand.nextInt(2500) < 5) {
+			if (rand.nextInt(2500) < 2000) {
 				p.setVaccinated(true);
 				p.setInfectionStatus(InfectionStatus.VACCINATED);
 				if (p.getViruses().isEmpty()) {
 					p.setColor(Color.BLUE);
 				} else {
-					p.setColor(Color.YELLOW);
+					p.setColor(Color.MAGENTA);
 				}
 			}
 		}
