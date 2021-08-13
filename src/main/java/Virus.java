@@ -12,7 +12,8 @@ public class Virus {
     {
         for(int i = 0; i < genes.length; i++)
         {
-            if(Math.random() >= 0.5)
+        	double x = Math.random();
+            if(x >= 0.5)
                 genes[i] = 1;
             else
                 genes[i] = 0;

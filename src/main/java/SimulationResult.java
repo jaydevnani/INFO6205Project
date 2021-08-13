@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -6,6 +7,7 @@ public class SimulationResult {
     List<Host> population;
     int total;
     int counter;
+    int daysToVaccinate;
     public SimulationResult(List<Host> population){
         this.population = population;
         this.total = getTotalPopulation(this.population);
@@ -19,8 +21,16 @@ public class SimulationResult {
     public void printSimulationResult(){
         counter++;
         System.out.format("%10s%10s%10s%15s%15s%n", counter, total, getHealthyCount(this.population), getTotalInfected(this.population), getTotalVaccinated(this.population));
+        if(getTotalPopulation(this.population) == getTotalVaccinated(this.population)) daysToVaccinate = counter;
     }
-
+    
+	public void printFinalResult(HashMap<Virus, Integer> virusList) {
+		System.out.println("Days to vaccinate total surviving population : " + daysToVaccinate);
+		System.out.println("Total casualties : " + (Constants.POPULATION - getTotalPopulation(this.population)));
+		System.out.println("All variants documented with highest fitness levels : ");
+		System.out.println(virusList);
+	}
+    
     public int getTotalPopulation(List<Host> population){
         return population.size();
     }
@@ -64,4 +74,5 @@ public class SimulationResult {
             System.out.println();
         }
     }
+
 }

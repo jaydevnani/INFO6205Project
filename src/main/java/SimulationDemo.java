@@ -45,7 +45,7 @@ public class SimulationDemo implements ActionListener, Constants {
 	}
 
 	private void initializeParams() {
-		setTotalPopulation(1000);
+		setTotalPopulation(Constants.POPULATION);
 		setInfectedPopulation(1);
 	}
 
@@ -53,7 +53,7 @@ public class SimulationDemo implements ActionListener, Constants {
 		// Simulation main screen frame.
 		frame = new JFrame();
 		frame.setTitle(APP_NAME);
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 
 		frame.setBackground(Color.GREEN);
@@ -68,7 +68,7 @@ public class SimulationDemo implements ActionListener, Constants {
 
 		splitPane.setBottomComponent(emptyPanel);
 
-		splitPane.setDividerLocation(300);
+		splitPane.setDividerLocation(100);
 		frame.add(splitPane);
 
 		frame.setVisible(true);

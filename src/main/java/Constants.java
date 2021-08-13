@@ -12,6 +12,7 @@ public interface Constants {
     int GENES = 10;
     int MUTATION_RATE = 6;
     int DEATH_RATE = 12;
+	int RECOVERY_RATE = 6;
 }
 
 enum HostGenoType {
