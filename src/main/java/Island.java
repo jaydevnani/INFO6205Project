@@ -57,22 +57,18 @@ public class Island extends JPanel implements Observer, Constants {
 	}
 
 	public void updateLocations() {
-		HashMap<Virus, Integer> newVirusSet;
-		HashMap<Virus, Integer> crossoverSet;
 		for (Host per : hostList) {
 			if (days % Constants.MUTATION_RATE == 0 && per.isInfected() && rand.nextInt(100) < 32) {
-				newVirusSet = addVirusToSet(ga.mutatePopulation(per));
+				addVirusToMap(ga.mutatePopulation(per), per);
 				per.addViruses(ga.mutatePopulation(per));
-				virusList.putAll(newVirusSet);
 			}
 			if (per.isInfected() && per.getViruses().size() >= 2) {
-				crossoverSet = addVirusToSet(ga.populationRecombination(per));
+				addVirusToMap(ga.populationRecombination(per), per);
 				per.addViruses(ga.populationRecombination(per));
-				virusList.putAll(crossoverSet);
 			}
 			updateCoordinates(per, virusList);
-			updateInfectedDayCount(per);
 			recover(per);
+			succumb(per);
 			if (days > 365)
 				vaccinate(per);
 		}
@@ -86,9 +82,22 @@ public class Island extends JPanel implements Observer, Constants {
 	 * virusList.putAll(crossoverSet); } updateCoordinates(per, virusList); } }
 	 */
 
-	private HashMap<Virus, Integer> addVirusToSet(Virus mutateVirus) {
+	private void succumb(Host per) {
+		if(per.isInfected()) {
+			if(rand.nextInt(100) < Constants.DEATH_RATE) {
+				hostList.remove(per);
+				totalPopulation--;
+			}
+		}
+	}
 
-		return null;
+	private void addVirusToMap(Virus virus, Host per) {
+		int fitness = fitnessCalculation(virus, per);
+		if(virusList.containsKey(virus)) {
+			int existingFitness = virusList.get(virus);
+			if(existingFitness < fitness)
+				virusList.replace(virus, fitness);
+		}
 	}
 
 	private void updateCoordinates(Host per, HashMap<Virus, Integer> virusList) {
@@ -112,7 +121,7 @@ public class Island extends JPanel implements Observer, Constants {
 
 		// co-ordinated which needs to null;
 		int nextX = X + dirX * 5, nextY = Y + dirY * 5;
-		boolean isCollide = checkForCollision(nextX, nextY, per, virusList);
+		boolean isCollide = checkForCollision(nextX, nextY, per);
 
 		if (!isCollide) {
 			per.setDir(new int[] { dirX, dirY });
@@ -127,18 +136,6 @@ public class Island extends JPanel implements Observer, Constants {
 			per.setY(Y + (updatedDir[1] * 5));
 			safeToMove(per);
 			updateHashMap(per.getX(), per.getY(), per);
-		}
-	}
-
-	private void updateInfectedDayCount(Host p) {
-		int infectionPeriod;
-		if (p.isInfected()) {
-			infectionPeriod = p.getDaysInfected();
-			// System.out.println("Host " + p.getId() + " has been infected for " +
-			// infectionPeriod);
-			infectionPeriod++;
-			p.setDaysInfected(infectionPeriod);
-			// System.out.println("Infection day count up to " + infectionPeriod);
 		}
 	}
 
@@ -157,7 +154,6 @@ public class Island extends JPanel implements Observer, Constants {
 				p.setInfected(false);
 				p.setColor(Color.ORANGE);
 				p.setInfectionStatus(InfectionStatus.RECOVERED);
-
 			}
 		}
 	}
@@ -166,15 +162,12 @@ public class Island extends JPanel implements Observer, Constants {
 		if (!p.isInfected() && !p.isVaccinated()) {
 			if (rand.nextInt(2500) < 5) {
 				p.setVaccinated(true);
+				p.setInfectionStatus(InfectionStatus.VACCINATED);
 				if (p.getViruses().isEmpty()) {
 					p.setColor(Color.BLUE);
-					p.setHostType(HostType.B1);
 				} else {
 					p.setColor(Color.YELLOW);
-					p.setHostType(HostType.B2);
 				}
-				// System.out.println("Host " + p.getId() + " has been vaccinated against Covid
-				// on day " + days);
 			}
 		}
 	}
@@ -245,7 +238,7 @@ public class Island extends JPanel implements Observer, Constants {
 		}
 	}
 
-	public boolean checkForCollision(int X, int Y, Host per, HashMap<Virus, Integer> virusList) {
+	public boolean checkForCollision(int X, int Y, Host per) {
 		String key = getKey(X, Y);
 		if (map.containsKey(key)) {
 			Integer index = map.get(key);
@@ -254,7 +247,7 @@ public class Island extends JPanel implements Observer, Constants {
 			else {
 				Host nextPer = hostList.get(index.intValue());
 				if ((per.isInfected() && !nextPer.isVaccinated()) || (nextPer.isInfected() && !per.isVaccinated())) // if
-					infection(per, nextPer, virusList);
+					infection(per, nextPer);
 				return true;
 			}
 		} else
@@ -297,21 +290,76 @@ public class Island extends JPanel implements Observer, Constants {
 		return "" + X + "-" + Y;
 	}
 
-	public void infection(Host per, Host nextPer, HashMap<Virus, Integer> virusList) {
+	public void infection(Host per, Host nextPer) {
+		Virus virus;
 		if (per.getColor() == Color.RED && nextPer.getColor() == Color.GREEN) {
-			nextPer.setHostType(HostType.A2);
-			nextPer.addViruses(getVirus(per));
+			virus = getVirus(per);
+			nextPer.addViruses(virus);
 			nextPer.setColor(Color.RED);
 			nextPer.setInfected(true);
-			nextPer.setDaysInfected(1);
+			addVirusToMap(virus, nextPer);
 		}
 		if (per.getColor() == Color.GREEN && nextPer.getColor() == Color.RED) {
-			per.setHostType(HostType.A2);
+			virus = getVirus(nextPer);
 			per.addViruses(getVirus(nextPer));
 			per.setColor(Color.RED);
 			per.setInfected(true);
-			per.setDaysInfected(1);
+			addVirusToMap(virus, per);
 		}
+	}
+
+	private int fitnessCalculation(Virus virus, Host per) {
+		int independentFitness = virus.getFitness();
+		int finalFitness = 0;
+		
+		if(per.getHostGenoType() == HostGenoType.A1 && per.getInfectionStatus() == InfectionStatus.NAIVE){ 
+			finalFitness = independentFitness * 20;
+		}
+		
+		if(per.getHostGenoType() == HostGenoType.A1 && per.getInfectionStatus() == InfectionStatus.RECOVERED){ 
+			finalFitness = independentFitness * 17;
+		}
+
+		if(per.getHostGenoType() == HostGenoType.A1 && per.getInfectionStatus() == InfectionStatus.VACCINATED){ 
+			finalFitness = independentFitness * 14;
+		}
+
+		if(per.getHostGenoType() == HostGenoType.A2 && per.getInfectionStatus() == InfectionStatus.NAIVE){ 
+			finalFitness = independentFitness * 7;
+		}
+
+		if(per.getHostGenoType() == HostGenoType.A2 && per.getInfectionStatus() == InfectionStatus.RECOVERED){ 
+			finalFitness = independentFitness * 5;
+		}
+
+		if(per.getHostGenoType() == HostGenoType.A2 && per.getInfectionStatus() == InfectionStatus.VACCINATED){ 
+			finalFitness = independentFitness * 4;
+		}
+		
+		if(per.getHostGenoType() == HostGenoType.B1 && per.getInfectionStatus() == InfectionStatus.NAIVE){ 
+			finalFitness = independentFitness * 22;
+		}
+		
+		if(per.getHostGenoType() == HostGenoType.B1 && per.getInfectionStatus() == InfectionStatus.RECOVERED){ 
+			finalFitness = independentFitness * 13;
+		}
+
+		if(per.getHostGenoType() == HostGenoType.B1 && per.getInfectionStatus() == InfectionStatus.VACCINATED){ 
+			finalFitness = independentFitness * 3;
+		}
+
+		if(per.getHostGenoType() == HostGenoType.B2 && per.getInfectionStatus() == InfectionStatus.NAIVE){ 
+			finalFitness = independentFitness * 19;
+		}
+
+		if(per.getHostGenoType() == HostGenoType.B2 && per.getInfectionStatus() == InfectionStatus.RECOVERED){ 
+			finalFitness = independentFitness * 17;
+		}
+
+		if(per.getHostGenoType() == HostGenoType.B2 && per.getInfectionStatus() == InfectionStatus.VACCINATED){ 
+			finalFitness = independentFitness * 15;
+		}
+		return finalFitness;
 	}
 
 	private Virus getVirus(Host per) {
