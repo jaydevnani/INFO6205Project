@@ -28,13 +28,13 @@ public class Island extends JPanel implements Observer, Constants {
 	HashMap<Virus, Integer> virusList;
 	HashMap<String, Integer> map = new HashMap<>();
 	SimulationResult benchMark;
-	VirusMutation vm;
+	//VirusMutation vm;
 	GeneticAlgorithm ga = new GeneticAlgorithm();
 	int ctr = 0;
 
 	public Island() {
 		this.totalPopulation = Constants.POPULATION;
-		vm = new VirusMutation();
+		//vm = new VirusMutation();
 	}
 
 	public void paint(Graphics g) {
