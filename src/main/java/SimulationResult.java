@@ -61,18 +61,4 @@ public class SimulationResult {
         }
         return counter;
     }
-    
-    public void printContactTracing(LinkedHashMap<Host, List<Host>> contact_graph){
-        for(Map.Entry<Host,List<Host>> entry : contact_graph.entrySet()){
-            Host source = entry.getKey();
-            List<Host> contactList = entry.getValue();
-
-            System.out.print("Host " + source.getId() + " was infected and contracted to --> ");
-            for(Host p: contactList){
-                System.out.print("  "  + p.getId());
-            }
-            System.out.println();
-        }
-    }
-
 }

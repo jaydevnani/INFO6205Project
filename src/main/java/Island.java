@@ -28,7 +28,6 @@ public class Island extends JPanel implements Observer, Constants {
 	HashMap<Virus, Integer> virusList = new HashMap<>();
 	HashMap<String, Integer> map = new HashMap<>();
 	SimulationResult benchMark;
-	VirusMutation vm;
 	GeneticAlgorithm ga = new GeneticAlgorithm();
 	int ctr = 0;
 
